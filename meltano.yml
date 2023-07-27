@@ -1,0 +1,31 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: "tap-loopreturns"
+default_environment: test
+environments:
+- name: test
+plugins:
+  extractors:
+  - name: "tap-loopreturns"
+    namespace: "tap_loopreturns"
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    - about
+    - stream-maps
+    config:
+      start_date: '2022-06-23T00:00:00+00:00'
+      backfill_interval: 5 # days
+      api_key: $API_KEY
+    settings:
+    # TODO: To configure using Meltano, declare settings and their types here:
+    - name: api_key
+      kind: password
+    - name: start_date
+      value: '2010-01-01T00:00:00'
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl

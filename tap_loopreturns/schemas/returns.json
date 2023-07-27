@@ -1,0 +1,255 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+      "id": {
+          "type": ["string","null"]
+      },
+      "state": {
+          "type": ["string","null"]
+      },
+      "created_at": {
+          "type": ["string","null"]
+      },
+      "updated_at": {
+          "type": ["string","null"]
+      },
+      "edited_at": {
+          "type": ["string","null"]
+      },
+      "total": {
+          "type": ["string","null"]
+      },
+      "outcome": {
+          "type": ["string","null"]
+      },
+      "order_id": {
+          "type": ["string","null"]
+      },
+      "order_name": {
+          "type": ["string","null"]
+      },
+      "provider_order_id": {
+          "type": ["string","null"]
+      },
+      "order_number": {
+          "type": ["string","null"]
+      },
+      "customer": {
+          "type": ["string","null"]
+      },
+      "multi_currency": {
+          "type": "boolean"
+      },
+      "currency": {
+          "type": ["string","null"]
+      },
+      "return_product_total": {
+          "type": ["string","null"]
+      },
+      "return_discount_total": {
+          "type": ["string","null"]
+      },
+      "return_tax_total": {
+          "type": ["string","null"]
+      },
+      "return_total": {
+          "type": ["string","null"]
+      },
+      "return_credit_total": {
+          "type": ["string","null"]
+      },
+      "exchange_product_total": {
+          "type": ["string","null"]
+      },
+      "exchange_discount_total": {
+          "type": ["string","null"]
+      },
+      "exchange_tax_total": {
+          "type": ["string","null"]
+      },
+      "exchange_total": {
+          "type": ["string","null"]
+      },
+      "exchange_credit_total": {
+          "type": ["string","null"]
+      },
+      "gift_card": {
+          "type": ["string","null"]
+      },
+      "gift_card_order_name": {
+          "type": ["string","null"]
+      },
+      "gift_card_order_id": {
+          "type": ["string","null"]
+      },
+      "handling_fee": {
+          "type": ["string","null"]
+      },
+      "refund": {
+          "type": ["string","null"]
+      },
+      "upsell": {
+          "type": ["string","null"]
+      },
+      "line_items": {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties": {
+                  "line_item_id": {
+                      "type": ["string","null"]
+                  },
+                  "provider_line_item_id": {
+                      "type": ["string","null"]
+                  },
+                  "product_id": {
+                      "type": ["string","null"]
+                  },
+                  "variant_id": {
+                      "type": ["string","null"]
+                  },
+                  "sku": {
+                      "type": ["string","null"]
+                  },
+                  "title": {
+                      "type": ["string","null"]
+                  },
+                  "price": {
+                      "type": ["string","null"]
+                  },
+                  "discount": {
+                      "type": ["string","null"]
+                  },
+                  "tax": {
+                      "type": ["string","null"]
+                  },
+                  "refund": {
+                      "type": ["string","null"]
+                  },
+                  "returned_at": {
+                      "type": ["string","null"]
+                  },
+                  "exchange_variant": {
+                      "type": ["string","null"]
+                  },
+                  "return_reason": {
+                      "type": ["string","null"]
+                  },
+                  "parent_return_reason": {
+                      "type": ["string","null"]
+                  },
+                  "return_comment": {
+                      "type": ["string","null"]
+                  },
+                  "barcode": {
+                      "type": ["string","null"]
+                  },
+                  "outcome": {
+                      "type": ["string","null"]
+                  },
+                  "provider_restock_location_id": {
+                      "type": ["string","null"]
+                  }
+              },
+              "required": [
+                  "barcode",
+                  "discount",
+                  "exchange_variant",
+                  "line_item_id",
+                  "outcome",
+                  "parent_return_reason",
+                  "price",
+                  "product_id",
+                  "provider_line_item_id",
+                  "provider_restock_location_id",
+                  "refund",
+                  "return_comment",
+                  "return_reason",
+                  "returned_at",
+                  "sku",
+                  "tax",
+                  "title",
+                  "variant_id"
+              ]
+          }
+      },
+      "exchanges": {
+          "type": "array"
+      },
+      "carrier": {
+          "type": ["string","null"]
+      },
+      "tracking_number": {
+          "type": ["string","null"]
+      },
+      "label_status": {
+          "type": ["string","null"]
+      },
+      "label_url": {
+          "type": ["string","null"]
+      },
+      "label_rate": {
+          "type": ["string","null"]
+      },
+      "status_page_url": {
+          "type": ["string","null"]
+      },
+      "label_updated_at": {
+          "type": ["string","null"]
+      },
+      "destination_id": {
+          "type": "integer"
+      },
+      "return_method": {
+          "type": ["string","null"]
+      },
+      "package_reference": {
+          "type": ["string","null"]
+      }
+  },
+  "required": [
+      "carrier",
+      "created_at",
+      "currency",
+      "customer",
+      "destination_id",
+      "edited_at",
+      "exchange_credit_total",
+      "exchange_discount_total",
+      "exchange_product_total",
+      "exchange_tax_total",
+      "exchange_total",
+      "exchanges",
+      "gift_card",
+      "gift_card_order_id",
+      "gift_card_order_name",
+      "handling_fee",
+      "id",
+      "label_rate",
+      "label_status",
+      "label_updated_at",
+      "label_url",
+      "line_items",
+      "multi_currency",
+      "order_id",
+      "order_name",
+      "order_number",
+      "outcome",
+      "package_reference",
+      "provider_order_id",
+      "refund",
+      "return_credit_total",
+      "return_discount_total",
+      "return_method",
+      "return_product_total",
+      "return_tax_total",
+      "return_total",
+      "state",
+      "status_page_url",
+      "total",
+      "tracking_number",
+      "updated_at",
+      "upsell"
+  ]
+}
