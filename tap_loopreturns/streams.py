@@ -18,4 +18,5 @@ class ReturnsStream(LoopReturnsStream):
     records_jsonpath = "$.returns[*]"
     replication_method = "INCREMENTAL"
     schema_filepath = SCHEMAS_DIR / "returns.json"
-    is_sorted = False
+    is_sorted = True
+    check_sorted = False  # Skip checking sorting data

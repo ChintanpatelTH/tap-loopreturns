@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 from urllib.parse import parse_qsl, urlsplit
 
 import requests
+from dateutil import parser
 from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.streams import RESTStream
 
@@ -28,6 +29,8 @@ class LoopReturnsStream(RESTStream):
 
     # Set this value or override `get_new_paginator`.
     next_page_token_jsonpath = "$.nextPageUrl"  # noqa: S105
+    start_date: str | None = None
+    end_date: str | None = None
 
     @property
     def authenticator(self) -> APIKeyAuthenticator:
@@ -45,8 +48,8 @@ class LoopReturnsStream(RESTStream):
 
     def get_url_params(
         self,
-        context: dict | None,
-        next_page_token: Any | None,
+        context: dict | None,  # noqa: ARG002
+        next_page_token: Any | None,  # noqa: ANN401
     ) -> dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization.
 
@@ -60,28 +63,42 @@ class LoopReturnsStream(RESTStream):
         params: dict = {}
         if next_page_token:
             return dict(parse_qsl(urlsplit(next_page_token).query))
-        if self.replication_key:
-            current_date = datetime.now(timezone.utc).replace(microsecond=0)
-            context_state = self.get_context_state(context)
-            last_updated = context_state.get("replication_key_value")
-            interval = self.config.get("backfill_interval")
-            config_start_date = self.config.get("start_date")
-            # set from date to last updated date or config start date
-            start_date = datetime.strptime(
-                (last_updated if last_updated else config_start_date),
-                "%Y-%m-%dT%H:%M:%S%z",
-            ) + timedelta(seconds=1) # Add 1 second to last updated date to avoid duplicates  # noqa: E501
-            params["from"] = start_date.strftime("%Y-%m-%dT%H:%M:%S")
-            # set to date to current date or start date + interval
-            if interval:
-                params["to"] = (
-                    current_date.strftime("%Y-%m-%dT%H:%M:%S")
-                    if start_date + timedelta(days=interval) > current_date
-                    else (start_date + timedelta(days=interval)).strftime(
-                        "%Y-%m-%dT%H:%M:%S",
-                    )
-                )
-            params["paginate"] = True
-            params["pageSize"] = PAGE_SIZE
-            params["filter"] = "updated_at"
+
+        params["from"] = self.start_date
+        params["to"] = self.end_date
+        params["paginate"] = True
+        params["pageSize"] = PAGE_SIZE
+        params["filter"] = "updated_at"
         return params
+
+    def get_records(self, context: dict) -> Iterable[dict[str, Any]]:
+        """Return a generator of row-type dictionary objects.
+
+        Args:
+            context: The stream context.
+
+        Yields:
+            Each record from the source.
+        """
+        current_state = self.get_context_state(context)
+        current_date = datetime.now(timezone.utc)
+        interval = float(self.config.get("backfill_interval", 1))
+        min_value = current_state.get(
+            "replication_key_value",
+            self.config.get("start_date", ""),
+        )
+        context = context or {}
+        # set from date to last updated date or config start date
+        min_date = parser.parse(min_value) + timedelta(seconds=1)
+        while min_date < current_date:
+            updated_at_max = min_date + timedelta(days=interval)
+            if updated_at_max > current_date:
+                updated_at_max = current_date
+
+            self.start_date = min_date.isoformat()
+            self.end_date = updated_at_max.isoformat()
+            yield from super().get_records(context)
+            # Send state message
+            self._increment_stream_state({"updated_at": self.end_date}, context=context)
+            self._write_state_message()
+            min_date = updated_at_max
