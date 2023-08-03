@@ -81,7 +81,7 @@ class LoopReturnsStream(RESTStream):
             Each record from the source.
         """
         current_state = self.get_context_state(context)
-        current_date = datetime.now(timezone.utc)
+        current_date = datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
         interval = float(self.config.get("backfill_interval", 1))
         min_value = current_state.get(
             "replication_key_value",
@@ -89,7 +89,7 @@ class LoopReturnsStream(RESTStream):
         )
         context = context or {}
         # set from date to last updated date or config start date
-        min_date = parser.parse(min_value) + timedelta(seconds=1)
+        min_date = parser.parse(min_value).replace(tzinfo=None) + timedelta(seconds=1)
         while min_date < current_date:
             updated_at_max = min_date + timedelta(days=interval)
             if updated_at_max > current_date:
