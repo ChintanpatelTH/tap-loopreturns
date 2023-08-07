@@ -89,7 +89,7 @@ class LoopReturnsStream(RESTStream):
         )
         context = context or {}
         # set from date to last updated date or config start date
-        min_date = parser.parse(min_value).replace(tzinfo=None) + timedelta(seconds=1)
+        min_date = parser.parse(min_value).replace(tzinfo=None)
         while min_date < current_date:
             updated_at_max = min_date + timedelta(days=interval)
             if updated_at_max > current_date:
